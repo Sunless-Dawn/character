@@ -67,6 +67,71 @@ pub struct Stats {
     pub dodge_chance: u32,
 }
 
+impl Stats {
+    pub fn level_up(&mut self, class: &Class) {
+        self.level += 1;
+        self.experience = 0;
+
+        // increase primary stat
+        match class {
+            Class::Mercenary => {
+                self.strength += 2000;
+                self.intelligence += 1000;
+                self.dexterity += 1000;
+            }
+            Class::Hacker => {
+                self.strength += 1000;
+                self.intelligence += 2000;
+                self.dexterity += 1000;
+            }
+            Class::Rogue => {
+                self.strength += 1000;
+                self.intelligence += 1000;
+                self.dexterity += 2000;
+            }
+        }
+
+        // recalculate secondary stats
+        self.update();
+    }
+
+    pub fn update(&mut self) {
+        let starting_hp = 100000; // 100 HP to start
+        let hp_growth = 5000; // grows by 5 per level
+        let starting_damage = 10000; // 10 damage to start, grows by strength
+        let defense_ratio = 4; // 25% of strength is defense
+
+        let starting_ap = 20000; // 20 AP to start
+        let ap_growth = 2000; // grows by 2 per level
+        let tech_defense_ratio = 4; // 25% of intelligence is tech_defense
+        let tech_critical_ratio = 4; // 25% of intelligence is tech_critical
+        let tech_starting_damage = 10000; // 10 tech_damage to start, grows by intelligence
+
+        let starting_hit_chance = 50000; // 50% hit chance
+        let hit_chance_growth = 7; // numerator of hit chance % growth
+        let hit_chance_ratio = 100; // denominator of hit chance % growth
+        let critical_chance_ratio = 4; // 25% of dexterity is critical_chance
+        let dodge_chance_ratio = 4; // 25% of dexterity is dodge_chance
+
+        // strength stats
+        self.hp = starting_hp + (hp_growth * self.level);
+        self.defense = self.strength / defense_ratio;
+        self.damage = starting_damage + self.strength;
+
+        // intelligence stats
+        self.ap = starting_ap + (ap_growth * self.level);
+        self.tech_defense = self.intelligence / tech_defense_ratio;
+        self.tech_damage = tech_starting_damage + self.intelligence;
+        self.tech_critical = self.intelligence / tech_critical_ratio;
+
+        // dexterity stats
+        self.hit_chance =
+            starting_hit_chance + (hit_chance_growth * self.dexterity / hit_chance_ratio);
+        self.critical_chance = self.dexterity / critical_chance_ratio;
+        self.dodge_chance = self.dexterity / dodge_chance_ratio;
+    }
+}
+
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Character {
     pub name: String,
@@ -76,6 +141,12 @@ pub struct Character {
     pub skin_color: SkinColor,
     pub class: Class,
     pub stats: Stats,
+}
+
+impl Character {
+    pub fn level_up(&mut self) {
+        self.stats.level_up(&self.class);
+    }
 }
 
 #[cfg(test)]

@@ -69,13 +69,23 @@ pub struct Stats {
 
 impl Stats {
     pub fn new() -> Self {
-        var s Self;
-        s.level = 0;
-        s.experience = 0;
-
-        s.strength = 5000;
-        s.intelligence = 5000;
-        s.dexterity = 5000;
+        let mut s = Self {
+            level: 0,
+            experience: 0,
+            strength: 5000,
+            intelligence: 5000,
+            dexterity: 5000,
+            hp: 0,
+            defense: 0,
+            damage: 0,
+            ap: 0,
+            tech_defense: 0,
+            tech_damage: 0,
+            tech_critical: 0,
+            hit_chance: 0,
+            critical_chance: 0,
+            dodge_chance: 0,
+        };
 
         s.update();
 
@@ -146,9 +156,15 @@ impl Stats {
     }
 }
 
+impl Default for Stats {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Character {
-    pub name: String,+
+    pub name: String,
     pub class: Class,
     pub sex: Sex,
     pub hair_color: HairColor,
@@ -158,16 +174,23 @@ pub struct Character {
 }
 
 impl Character {
-    pub fn new(name:String, class:Class, sex:Sex, hair_color:HairColor, eye_color:EyeColor, skin_color:SkinColor) -> Self {
-        var s Self;
-
-        s.name = name;
-        s.class = class;
-        s.sex = sex;
-        s.hair_color = hair_color;
-        s.eye_color = eye_color;
-        s.skin_color = skin_color;
-        s.stats = Stats::new();
+    pub fn new(
+        name: String,
+        class: Class,
+        sex: Sex,
+        hair_color: HairColor,
+        eye_color: EyeColor,
+        skin_color: SkinColor,
+    ) -> Self {
+        Self {
+            name,
+            class,
+            sex,
+            hair_color,
+            eye_color,
+            skin_color,
+            stats: Stats::new(),
+        }
     }
 
     pub fn level_up(&mut self) {

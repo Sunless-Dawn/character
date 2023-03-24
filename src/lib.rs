@@ -41,7 +41,7 @@ pub enum Class {
     Rogue, // TODO: rename to something more cyberpunk
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Stats {
     // primary stats
     pub level: u32,
@@ -153,12 +153,6 @@ impl Stats {
             starting_hit_chance + (hit_chance_growth * self.dexterity / hit_chance_ratio);
         self.critical_chance = self.dexterity / critical_chance_ratio;
         self.dodge_chance = self.dexterity / dodge_chance_ratio;
-    }
-}
-
-impl Default for Stats {
-    fn default() -> Self {
-        Self::new()
     }
 }
 

@@ -136,8 +136,7 @@ impl Stats {
         let tech_starting_damage = 10000; // 10 tech_damage to start, grows by intelligence
 
         let starting_hit_chance = 50000; // 50% hit chance
-        let hit_chance_growth = 7; // numerator of hit chance % growth
-        let hit_chance_ratio = 100; // denominator of hit chance % growth
+        let hit_chance_growth = 228; // hit chance growth per level
         let critical_chance_ratio = 4; // 25% of dexterity is critical_chance
         let dodge_chance_ratio = 4; // 25% of dexterity is dodge_chance
 
@@ -153,8 +152,7 @@ impl Stats {
         self.tech_critical = self.intelligence / tech_critical_ratio;
 
         // dexterity stats
-        self.hit_chance =
-            starting_hit_chance + (hit_chance_growth * self.dexterity / hit_chance_ratio);
+        self.hit_chance = starting_hit_chance + (hit_chance_growth * self.level);
         self.critical_chance = self.dexterity / critical_chance_ratio;
         self.dodge_chance = self.dexterity / dodge_chance_ratio;
 
@@ -254,7 +252,7 @@ mod tests {
             assert_eq!(s.tech_damage, 16000);
             assert_eq!(s.tech_defense, 1500);
             assert_eq!(s.tech_critical, 1500);
-            assert_eq!(s.hit_chance, 50420);
+            assert_eq!(s.hit_chance, 50228);
             assert_eq!(s.critical_chance, 1500);
             assert_eq!(s.dodge_chance, 1500);
         }

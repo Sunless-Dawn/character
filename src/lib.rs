@@ -175,7 +175,7 @@ pub struct Character {
 
 impl Character {
     pub fn new(
-        name: String,
+        name: &'static str,
         class: Class,
         sex: Sex,
         hair_color: HairColor,
@@ -183,7 +183,7 @@ impl Character {
         skin_color: SkinColor,
     ) -> Self {
         Self {
-            name,
+            name: name.to_string(),
             class,
             sex,
             hair_color,

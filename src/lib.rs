@@ -128,16 +128,16 @@ impl Stats {
     pub fn update(&mut self) {
         let starting_hp = 100000; // 100 HP to start
         let hp_growth = 5000; // grows by 5 per level
-        let starting_damage = 10000; // 10 damage to start, grows by strength
+        let starting_damage = 5000; // 10 damage to start, grows by strength
         let defense_ratio = 4; // 25% of strength is defense
 
         let starting_ap = 20000; // 20 AP to start
         let ap_growth = 2000; // grows by 2 per level
         let tech_defense_ratio = 4; // 25% of intelligence is tech_defense
         let tech_critical_ratio = 4; // 25% of intelligence is tech_critical
-        let tech_starting_damage = 10000; // 10 tech_damage to start, grows by intelligence
+        let tech_starting_damage = 5000; // 10 tech_damage to start, grows by intelligence
 
-        let starting_hit_chance = 50000; // 50% hit chance
+        let starting_hit_chance = 49650; // 50% hit chance
         let hit_chance_growth = 7; // numerator of hit chance % growth
         let hit_chance_ratio = 100; // denominator of hit chance % growth
         let critical_chance_ratio = 4; // 25% of dexterity is critical_chance
@@ -202,9 +202,24 @@ impl Character {
 mod tests {
     use super::*;
 
-    //#[test]
-    //fn it_works() {
-    //    let result = add(2, 2);
-    //    assert_eq!(result, 4);
-    //}
+    // test default values for stats
+    #[test]
+    fn test_default_stats() {
+        let s: Stats = Default::default();
+        assert_eq!(s.level, 0);
+        assert_eq!(s.experience, 0);
+        assert_eq!(s.strength, 5000);
+        assert_eq!(s.intelligence, 5000);
+        assert_eq!(s.dexterity, 5000);
+        assert_eq!(s.hp, 100000);
+        assert_eq!(s.defense, 1250);
+        assert_eq!(s.damage, 10000);
+        assert_eq!(s.ap, 20000);
+        assert_eq!(s.tech_damage, 10000);
+        assert_eq!(s.tech_defense, 1250);
+        assert_eq!(s.tech_critical, 1250);
+        assert_eq!(s.hit_chance, 50000);
+        assert_eq!(s.critical_chance, 1250);
+        assert_eq!(s.dodge_chance, 1250);
+    }
 }

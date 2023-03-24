@@ -1,11 +1,15 @@
+//! This crate providers the character library for Sunless Dawn
+
 use serde::{Deserialize, Serialize};
 
+/// Character Sex. Male or Female.
 #[derive(Clone, Serialize, Deserialize)]
 pub enum Sex {
     Male,
     Female,
 }
 
+/// Character hair color choices
 #[derive(Clone, Serialize, Deserialize)]
 pub enum HairColor {
     Black,
@@ -17,6 +21,7 @@ pub enum HairColor {
     Purple,
 }
 
+/// Character eye color choices
 #[derive(Clone, Serialize, Deserialize)]
 pub enum EyeColor {
     Blue,
@@ -25,6 +30,7 @@ pub enum EyeColor {
     Brown,
 }
 
+/// Character skin color choices
 #[derive(Clone, Serialize, Deserialize)]
 pub enum SkinColor {
     Light,
@@ -32,6 +38,10 @@ pub enum SkinColor {
     Dark,
 }
 
+/// Character class choices
+/// Mercenary has a primary stat of Strength
+/// Hacker has a primary stat of Intelligence
+/// Rogue has a primary stat of Dexterity
 #[derive(Clone, Serialize, Deserialize)]
 pub enum Class {
     Mercenary,
@@ -39,6 +49,10 @@ pub enum Class {
     Rogue, // TODO: rename to something more cyberpunk
 }
 
+/// Character stats
+/// level, strength, intelligence, and dexterity are the primary stats
+/// the other stats are derived as a combination of level and primary stats
+/// items equipped to the character can affect stats as well
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Stats {
     // primary stats
@@ -65,6 +79,7 @@ pub struct Stats {
     pub dodge_chance: u32,
 }
 
+/// Default function for Stats, default values for a new Character
 impl Default for Stats {
     fn default() -> Self {
         let mut s = Self {
@@ -92,10 +107,13 @@ impl Default for Stats {
 }
 
 impl Stats {
+    /// Stats::new returns a default Stats
     pub fn new() -> Self {
         Default::default()
     }
 
+    /// level_up increases the level of this Stats, and recalculates stats accordingly
+    /// level_up also resets experience back to 0
     pub fn level_up(&mut self, class: &Class) {
         self.level += 1;
         self.experience = 0;
@@ -123,6 +141,8 @@ impl Stats {
         self.update();
     }
 
+    /// update() recalculates all of the secondary stats from the primary stats
+    /// this function should be called whenever there is a change in level or equipment
     pub fn update(&mut self) {
         let starting_hp = 100000; // 100 HP to start
         let hp_growth = 5000; // grows by 5 per level
@@ -165,6 +185,9 @@ impl Stats {
     }
 }
 
+/// Character struct represents a character
+/// There are several immutable characteristics like name, class, and physical traits
+/// as well as the characters Stats
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Character {
     pub name: String,
@@ -177,6 +200,7 @@ pub struct Character {
 }
 
 impl Character {
+    /// returns a new character with the parameters specified
     pub fn new(
         name: &'static str,
         class: Class,
@@ -196,6 +220,7 @@ impl Character {
         }
     }
 
+    /// increase this character's level by one
     pub fn level_up(&mut self) {
         self.stats.level_up(&self.class);
     }

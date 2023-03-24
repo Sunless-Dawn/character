@@ -41,7 +41,7 @@ pub enum Class {
     Rogue, // TODO: rename to something more cyberpunk
 }
 
-#[derive(Default, Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Stats {
     // primary stats
     pub level: u32,
@@ -67,8 +67,8 @@ pub struct Stats {
     pub dodge_chance: u32,
 }
 
-impl Stats {
-    pub fn new() -> Self {
+impl Default for Stats {
+    fn default() -> Self {
         let mut s = Self {
             level: 0,
             experience: 0,
@@ -90,6 +90,12 @@ impl Stats {
         s.update();
 
         s
+    }
+}
+
+impl Stats {
+    pub fn new() -> Self {
+        Default::default()
     }
 
     pub fn level_up(&mut self, class: &Class) {

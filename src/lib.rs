@@ -260,5 +260,29 @@ mod tests {
             assert_eq!(s.critical_chance, 1500);
             assert_eq!(s.dodge_chance, 1500);
         }
+
+        // level up to 100
+        for _ in 0..99 {
+            c.level_up();
+        }
+
+        {
+            let s = &c.stats;
+            assert_eq!(s.level, 100);
+            assert_eq!(s.experience, 0);
+            assert_eq!(s.strength, 205000);
+            assert_eq!(s.intelligence, 105000);
+            assert_eq!(s.dexterity, 105000);
+            assert_eq!(s.hp, 600000);
+            assert_eq!(s.defense, 51250);
+            assert_eq!(s.damage, 215000);
+            assert_eq!(s.ap, 220000);
+            assert_eq!(s.tech_damage, 115000);
+            assert_eq!(s.tech_defense, 26250);
+            assert_eq!(s.tech_critical, 26250);
+            assert_eq!(s.hit_chance, 72800);
+            assert_eq!(s.critical_chance, 26250);
+            assert_eq!(s.dodge_chance, 26250);
+        }
     }
 }

@@ -128,16 +128,16 @@ impl Stats {
     pub fn update(&mut self) {
         let starting_hp = 100000; // 100 HP to start
         let hp_growth = 5000; // grows by 5 per level
-        let starting_damage = 5000; // 10 damage to start, grows by strength
+        let starting_damage = 10000; // 10 damage to start, grows by strength
         let defense_ratio = 4; // 25% of strength is defense
 
         let starting_ap = 20000; // 20 AP to start
         let ap_growth = 2000; // grows by 2 per level
         let tech_defense_ratio = 4; // 25% of intelligence is tech_defense
         let tech_critical_ratio = 4; // 25% of intelligence is tech_critical
-        let tech_starting_damage = 5000; // 10 tech_damage to start, grows by intelligence
+        let tech_starting_damage = 10000; // 10 tech_damage to start, grows by intelligence
 
-        let starting_hit_chance = 49650; // 50% hit chance
+        let starting_hit_chance = 50000; // 50% hit chance
         let hit_chance_growth = 7; // numerator of hit chance % growth
         let hit_chance_ratio = 100; // denominator of hit chance % growth
         let critical_chance_ratio = 4; // 25% of dexterity is critical_chance
@@ -159,6 +159,13 @@ impl Stats {
             starting_hit_chance + (hit_chance_growth * self.dexterity / hit_chance_ratio);
         self.critical_chance = self.dexterity / critical_chance_ratio;
         self.dodge_chance = self.dexterity / dodge_chance_ratio;
+
+        // at level 0 use starting values
+        if self.level == 0 {
+            self.damage = starting_damage;
+            self.tech_damage = starting_damage;
+            self.hit_chance = starting_hit_chance;
+        }
     }
 }
 
@@ -221,5 +228,37 @@ mod tests {
         assert_eq!(s.hit_chance, 50000);
         assert_eq!(s.critical_chance, 1250);
         assert_eq!(s.dodge_chance, 1250);
+    }
+
+    #[test]
+    fn test_level_up() {
+        let mut c = Character::new(
+            "Test Character",
+            Class::Mercenary,
+            Sex::Male,
+            HairColor::Brown,
+            EyeColor::Hazel,
+            SkinColor::Light,
+        );
+        c.level_up();
+
+        {
+            let s = &c.stats;
+            assert_eq!(s.level, 1);
+            assert_eq!(s.experience, 0);
+            assert_eq!(s.strength, 7000);
+            assert_eq!(s.intelligence, 6000);
+            assert_eq!(s.dexterity, 6000);
+            assert_eq!(s.hp, 105000);
+            assert_eq!(s.defense, 1750);
+            assert_eq!(s.damage, 17000);
+            assert_eq!(s.ap, 22000);
+            assert_eq!(s.tech_damage, 16000);
+            assert_eq!(s.tech_defense, 1500);
+            assert_eq!(s.tech_critical, 1500);
+            assert_eq!(s.hit_chance, 50420);
+            assert_eq!(s.critical_chance, 1500);
+            assert_eq!(s.dodge_chance, 1500);
+        }
     }
 }

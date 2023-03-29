@@ -1,5 +1,9 @@
 //! This crate providers the character library for Sunless Dawn
 
+use rand::{
+    distributions::{Distribution, Standard},
+    Rng,
+};
 use serde::{Deserialize, Serialize};
 
 /// Character Sex. Male or Female.
@@ -7,6 +11,15 @@ use serde::{Deserialize, Serialize};
 pub enum Sex {
     Male,
     Female,
+}
+
+impl Distribution<Sex> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Sex {
+        match rng.gen_range(0..=1) {
+            0 => Sex::Male,
+            _ => Sex::Female,
+        }
+    }
 }
 
 /// Character hair color choices
@@ -21,6 +34,20 @@ pub enum HairColor {
     Purple,
 }
 
+impl Distribution<HairColor> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> HairColor {
+        match rng.gen_range(0..=6) {
+            0 => HairColor::Black,
+            1 => HairColor::Brown,
+            2 => HairColor::Red,
+            3 => HairColor::Blonde,
+            4 => HairColor::Blue,
+            5 => HairColor::Pink,
+            _ => HairColor::Purple,
+        }
+    }
+}
+
 /// Character eye color choices
 #[derive(Clone, Serialize, Deserialize)]
 pub enum EyeColor {
@@ -30,12 +57,33 @@ pub enum EyeColor {
     Brown,
 }
 
+impl Distribution<EyeColor> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> EyeColor {
+        match rng.gen_range(0..=3) {
+            0 => EyeColor::Blue,
+            1 => EyeColor::Green,
+            2 => EyeColor::Hazel,
+            _ => EyeColor::Brown,
+        }
+    }
+}
+
 /// Character skin color choices
 #[derive(Clone, Serialize, Deserialize)]
 pub enum SkinColor {
     Light,
     Medium,
     Dark,
+}
+
+impl Distribution<SkinColor> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> SkinColor {
+        match rng.gen_range(0..=2) {
+            0 => SkinColor::Light,
+            1 => SkinColor::Medium,
+            _ => SkinColor::Dark,
+        }
+    }
 }
 
 /// Character class choices
@@ -47,6 +95,16 @@ pub enum Class {
     Mercenary,
     Hacker,
     Rogue, // TODO: rename to something more cyberpunk
+}
+
+impl Distribution<Class> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Class {
+        match rng.gen_range(0..=2) {
+            0 => Class::Mercenary,
+            1 => Class::Hacker,
+            _ => Class::Rogue,
+        }
+    }
 }
 
 /// Character stats
@@ -216,6 +274,19 @@ impl Character {
             hair_color,
             eye_color,
             skin_color,
+            stats: Stats::new(),
+        }
+    }
+
+    // return a character with random physical traits
+    pub fn random(name: &'static str) -> Self {
+        Self {
+            name: name.to_string(),
+            class: rand::random(),
+            sex: rand::random(),
+            hair_color: rand::random(),
+            eye_color: rand::random(),
+            skin_color: rand::random(),
             stats: Stats::new(),
         }
     }
